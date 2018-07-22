@@ -1,0 +1,8 @@
+{
+  "name": "game",
+  "app_id": "54bcc009",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
