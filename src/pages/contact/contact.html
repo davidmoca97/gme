@@ -1,17 +1,33 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Contact
+  <ion-navbar color="primary">
+    <ion-title text-center>
+        ¡Welcome!
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
-  </ion-list>
+<ion-content class="animated zoomIn slow">
+  <ion-slides>
+    <ion-slide>
+      <ion-toolbar>
+      </ion-toolbar>
+
+      <img src="assets/imgs/LogoEmpresa.png" class="slide-image" />
+      <h2 class="slide-title">Unique games</h2>
+
+      <button ion-button large clear icon-right color="primary">
+        Let's Begin
+        <ion-icon name="game-controller-a"></ion-icon>
+      </button>
+
+    </ion-slide>
+
+  </ion-slides>
+
+
 </ion-content>
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-title item-left>Skigen Inc.</ion-title>
+  </ion-toolbar>
+</ion-footer>
