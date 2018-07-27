@@ -10,8 +10,8 @@ export class ContactPage {
 
   constructor(public navCtrl: NavController) {
     setTimeout(()=>{
-      // this.navCtrl.setRoot(AboutPage);
-      // this.navCtrl.popToRoot();
+      this.navCtrl.setRoot(AboutPage);
+      this.navCtrl.popToRoot();
     },4200);
   }
 
