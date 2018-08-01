@@ -69,6 +69,7 @@ export class AboutPage {
             this.board[6 - selectedColumnLevel].array[ghost - 1].selectedBy = 'P2';
           }
 
+          this.checkAllBoard((6 - selectedColumnLevel), (ghost - 1));
           //Se cambia el turno (variables, imágenes)
           this.selectedGhost = 4;
           this.isWorking = false;
@@ -84,9 +85,9 @@ export class AboutPage {
           if (selectedColumnLevel == 6) {
             document.querySelector(`#ghost${ghost}`).classList.add('full-column');
           }
-          if (this.checkAllBoard()) {
-            this.Tie();
-          }
+          // if (this.checkAllBoard()) {
+          //   this.Tie();
+          // };
           this.fullSpaces++;
           // console.log('espacios we ', this.fullSpaces);
         }, 1000);
@@ -102,14 +103,32 @@ export class AboutPage {
       title: 'Miss',
       subTitle: 'It\'s a tie!',
       buttons: [{
-        text:'Dismiss',
-        handler:()=>{
+        text: 'Dismiss',
+        handler: () => {
           this.reiniciar();
         }
       }]
     });
     alert.present();
   }
+
+  //Alerta de Empate *aún no se usa*
+  Winner() {
+    // if (!this.isWorking) {
+    // }
+    let alert = this.alertCtrl.create({
+      title: 'You\'ve won',
+      subTitle: ':)',
+      buttons: [{
+        text: 'Dismiss',
+        handler: () => {
+          this.reiniciar();
+        }
+      }]
+    });
+    alert.present();
+  }
+
 
   //Cuando el usuario mueve el dedo hacia la derecha
   moveRight() {
@@ -138,18 +157,80 @@ export class AboutPage {
   reiniciar() {
     this.navCtrl.setRoot(this.navCtrl.getActive().component);
   }
-  checkAllBoard() {
-    let counter: number = 0;
-    let showtoast: boolean = false;
-    this.columnLevel.forEach((element: number) => {
+  checkAllBoard(fila, columna) {
+    let turn: string = '';
+    let cntR: number = 0;
+    let cntC: number = 0;
+    let cnt45: number = 0;
+    let cnt135: number = 0;
+    if (this.P1Turn) {
+      turn = 'P1';
+    } else {
+      turn = 'P2';
+    }
 
-      if (element === 6)
-        counter++;
-      if (counter === 7) {
-        showtoast = true;
+    //Checa las filas
+    for (let i = 0; i < 7; i++) {
+      let item = this.board[fila].array[i].selectedBy;
+      let anterior = null;
+      if (i !== 0) {
+        anterior = this.board[fila].array[i - 1].selectedBy;
       }
-    });
-    console.log('contador ', counter);
-    return showtoast;
+      if ((item === turn) && (anterior === turn || anterior === null || cntR === 0)) {
+        cntR++;
+      }
+      // console.log(i + '. ' + item);
+    }
+    if (cntR === 4) {
+      return this.Winner();
+    }
+    // Checaste columnas
+    for (let i = 0; i < 6; i++) {
+      let item = this.board[i].array[columna].selectedBy;
+      let anterior = null;
+      if (i !== 0) {
+        anterior = this.board[i - 1].array[columna].selectedBy;
+      }
+      if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
+        cntC++;
+      }
+      console.log(i + '. ' + item);
+    }
+    if (cntC === 4) {
+      return this.Winner();
+    }
+
+    let difference45R: number = Math.abs(0-columna);
+    let difference45C: number = 6-fila-1;
+
+    console.log("INICIA EN: " + difference45C + ',' + difference45R );
+     // Checaste diagonal 35
+    //  for (let i = 0; i < 6; i++) {
+    //   let item = this.board[i].array[columna].selectedBy;
+    //   let anterior = null;
+    //   if (i !== 0) {
+    //     anterior = this.board[i - 1].array[columna].selectedBy;
+    //   }
+    //   if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
+    //     cntC++;
+    //   }
+    //   console.log(i + '. ' + item);
+    // }
+    // if (cntC === 4) {
+    //   return this.Winner();
+    // }
+
+    // let counter: number = 0;
+    // let showtoast: boolean = false;
+    // this.columnLevel.forEach((element: number) => {
+
+    //   if (element === 6)
+    //     counter++;
+    //   if (counter === 7) {
+    //     showtoast = true;
+    //   }
+    // });
+    // console.log('contador ', counter);
+    // return showtoast;
   }
 }
