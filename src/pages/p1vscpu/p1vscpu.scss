@@ -1,3 +1,69 @@
-page-p1vscpu {
+.col {
+    border: solid #66CDAA;
+    border-radius: 10px;
+    text-align: center;
+}
 
+.img {
+    width: 10%;
+    height: 10%;
+}
+
+.grid {
+    margin-top: 2%;
+}
+
+.animated-1 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(50vh);
+}
+
+.animated-2 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(43vh);
+}
+
+.animated-3 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(36vh);
+}
+
+.animated-4 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(28vh);
+}
+
+.animated-5 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(20vh);
+}
+
+.animated-6 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(11vh);
+}
+
+.animated-7 {
+    position: relative;
+    transition: all 1s ease;
+    transform: translateY(10vh);
+}
+
+.ghost {
+    border: none;
+}
+
+.full-column {
+    opacity: 0.5;
+}
+
+.fadeIn {
+    animation-name: fadeIn;
+    animation-duration: 4s;
 }

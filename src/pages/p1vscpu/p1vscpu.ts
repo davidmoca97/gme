@@ -43,66 +43,78 @@ export class P1vscpuPage {
       this.board.push({ array: array });
     }
   }
-  ionViewWillEnter(){
+
+  ionViewWillEnter() {
     this.viewCtrl.showBackButton(false);
+  }
+
+  async globalTurn() {
+    this.takeTurn();
+    setTimeout( f => {
+      if ( !this.P1Turn ) {
+        this.takeTurn();
+      }
+    }, 1500);
   }
 
   //Función que se llama cuando se presiona click, hace que la ficha baje en la columna seleccionada
   takeTurn() {
-    if (!this.isWorking) {
-      let ghost = this.selectedGhost; //columna seleccionada (1-7)
-      let selectedColumnLevel = this.columnLevel[ghost - 1] + 1;
-      if (selectedColumnLevel < 7) {
-        this.playSound();
-        this.isWorking = true;
-        document.querySelector(`#ghost${ghost}`).classList.add(`animated-${selectedColumnLevel}`);
-        setTimeout(() => {
-          this.columnLevel[ghost - 1] = selectedColumnLevel;
-
-          //Se le asignan valores a las propiedades del campo del tablero
-          // console.log('Columna ', this.selectedGhost);
-          // console.log('Fila ', selectedColumnLevel);
-          // console.log('Nivel de columna ', this.columnLevel);
-
-
-          if (this.P1Turn) {
-            this.board[6 - selectedColumnLevel].array[ghost - 1].img = this.P1IMGSRC;
-            this.board[6 - selectedColumnLevel].array[ghost - 1].selectedBy = 'P1';
-          } else {
-            this.board[6 - selectedColumnLevel].array[ghost - 1].img = this.P2IMGSRC;
-            this.board[6 - selectedColumnLevel].array[ghost - 1].selectedBy = 'P2';
-          }
-
-          this.checkAllBoard((6 - selectedColumnLevel), (ghost - 1));
-          //Se cambia el turno (variables, imágenes)
-          this.selectedGhost = 4;
-          this.isWorking = false;
-          this.P1Turn = !this.P1Turn;
-          if (this.P1Turn) {
-            this.imgSrc = this.P1IMGSRC;
-          } else {
-            this.imgSrc = this.P2IMGSRC;
-          }
-
-          document.querySelector(`#ghost${ghost}`).classList.remove(`animated-${selectedColumnLevel}`);
-          //Si la columna está completamente llena
-          if (selectedColumnLevel == 6) {
-            document.querySelector(`#ghost${ghost}`).classList.add('full-column');
-          }
-          // if (this.checkAllBoard()) {
-          //   this.Tie();
-          // };
-          this.fullSpaces++;
-          // console.log('espacios we ', this.fullSpaces);
-        }, 1000);
+      if (!this.isWorking) {
+        let ghost = this.selectedGhost; //columna seleccionada (1-7)
+        
+        let selectedColumnLevel = this.columnLevel[ghost - 1] + 1;
+        if (selectedColumnLevel < 7) {
+          this.playSound();
+          this.isWorking = true;
+          document.querySelector(`#ghost${ghost}`).classList.add(`animated-${selectedColumnLevel}`);
+         
+          
+          setTimeout(() => {
+            this.columnLevel[ghost - 1] = selectedColumnLevel;
+  
+            //Se le asignan valores a las propiedades del campo del tablero
+            // console.log('Columna ', this.selectedGhost);
+            // console.log('Fila ', selectedColumnLevel);
+            // console.log('Nivel de columna ', this.columnLevel);
+  
+  
+            if (this.P1Turn) {
+              this.board[6 - selectedColumnLevel].array[ghost - 1].img = this.P1IMGSRC;
+              this.board[6 - selectedColumnLevel].array[ghost - 1].selectedBy = 'P1';
+            } else {
+              this.board[6 - selectedColumnLevel].array[ghost - 1].img = this.P2IMGSRC;
+              this.board[6 - selectedColumnLevel].array[ghost - 1].selectedBy = 'P2';
+            }
+            // Se revisa el tablero de forma horizontal, vertical y en diagonal
+            this.checkAllBoard((6 - selectedColumnLevel), (ghost - 1));
+            //Se cambia el turno (variables, imágenes)
+            this.isWorking = false;
+            this.P1Turn = !this.P1Turn;
+            if (this.P1Turn) {
+              this.selectedGhost = 4;
+              this.imgSrc = this.P1IMGSRC;
+            } else {
+              this.selectedGhost = this.CPU();
+              this.imgSrc = this.P2IMGSRC;
+            }
+  
+            document.querySelector(`#ghost${ghost}`).classList.remove(`animated-${selectedColumnLevel}`);
+            //Si la columna está completamente llena
+            if (selectedColumnLevel == 6) {
+              document.querySelector(`#ghost${ghost}`).classList.add('full-column');
+            }
+            // if (this.checkAllBoard()) {
+            //   this.Tie();
+            // };
+            this.fullSpaces++;
+            // console.log('espacios we ', this.fullSpaces);
+          }, 1000);
+        }
       }
-    }
   }
 
-  //Alerta de Empate *aún no se usa*
+  //Alerta de Empate
   Tie() {
-    // if (!this.isWorking) {
-    // }
     let alert = this.alertCtrl.create({
       title: 'Miss',
       subTitle: 'It\'s a tie!',
@@ -116,17 +128,20 @@ export class P1vscpuPage {
     alert.present();
   }
 
-  //Alerta de Empate *aún no se usa*
+  //Alerta de Ganador
   Winner() {
-    // if (!this.isWorking) {
-    // }
+    let text : string = 'CPU won', text2 : string = ':(';
+    if( this.P1Turn ) {
+      text = 'You\'ve won';
+      text2 = ':)'
+    }
     let alert = this.alertCtrl.create({
-      title: 'You\'ve won',
-      subTitle: ':)',
+      title: text,
+      subTitle: text2,
       buttons: [{
-        text: 'Dismiss',
+        text: 'Ok',
         handler: () => {
-          this.reiniciar();
+          //this.reiniciar();
         }
       }]
     });
@@ -159,89 +174,169 @@ export class P1vscpuPage {
   }
 
   reiniciar() {
-    this.navCtrl.setRoot(this.navCtrl.getActive().component );
+    this.navCtrl.setRoot(this.navCtrl.getActive().component);
 
   }
   checkAllBoard(fila, columna) {
-    let turn: string = '';
-    let cntR: number = 0;
-    let cntC: number = 0;
-    let cnt45: number = 0;
-    let cnt135: number = 0;
-    if (this.P1Turn) {
-      turn = 'P1';
-    } else {
-      turn = 'P2';
-    }
-
-    //Checa las filas
-    for (let i = 0; i < 7; i++) {
-      let item = this.board[fila].array[i].selectedBy;
-      let anterior = null;
-      if (i !== 0) {
-        anterior = this.board[fila].array[i - 1].selectedBy;
+      let turn: string = '';
+      let cntR: number = 0;
+      let cntC: number = 0;
+      let cnt45: number = 0;
+      let cnt135: number = 0;
+      if (this.P1Turn) {
+        turn = 'P1';
+      } else {
+        turn = 'P2';
       }
-      if ((item === turn) && (anterior === turn || anterior === null || cntR === 0)) {
-        cntR++;
+
+      //Checa las filas
+      for (let i = 0; i < 7; i++) {
+        let item = this.board[fila].array[i].selectedBy;
+        if (item === turn) {
+          cntR ++;
+        } else {
+          cntR = 0;
+        }
+        if (cntR === 4) {
+          break;
+        }
       }
-      // console.log(i + '. ' + item);
-    }
-    if (cntR === 4) {
-      return this.Winner();
-    }
-    // Checaste columnas
-    for (let i = 0; i < 6; i++) {
-      let item = this.board[i].array[columna].selectedBy;
-      let anterior = null;
-      if (i !== 0) {
-        anterior = this.board[i - 1].array[columna].selectedBy;
+
+      if (cntR === 4) {
+        return this.Winner();
       }
-      if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
-        cntC++;
+
+      // Checaste columnas
+      for (let i = 0; i < 6; i++) {
+        let item = this.board[i].array[columna].selectedBy;
+        if (item === turn) {
+          cntC ++;
+        } else {
+          cntC = 0;
+        }
+        if (cntC === 4) {
+          break;
+        }
       }
-      console.log(i + '. ' + item);
-    }
-    if (cntC === 4) {
-      return this.Winner();
-    }
+      if (cntC === 4) {
+        return this.Winner();
+      }
 
-    let difference45R: number = Math.abs(0-columna);
-    let difference45C: number = 6-fila-1;
+      let y: number = fila, x: number = columna;
+      let exit: boolean = false;
+      let count: number = 0;
+  
+      //Checa diagonal en 45°
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        if (item === turn) {
+          cnt45++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x--;
+          y++;
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
 
-    console.log("INICIA EN: " + difference45C + ',' + difference45R );
-     // Checaste diagonal 35
-    //  for (let i = 0; i < 6; i++) {
-    //   let item = this.board[i].array[columna].selectedBy;
-    //   let anterior = null;
-    //   if (i !== 0) {
-    //     anterior = this.board[i - 1].array[columna].selectedBy;
-    //   }
-    //   if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
-    //     cntC++;
-    //   }
-    //   console.log(i + '. ' + item);
-    // }
-    // if (cntC === 4) {
-    //   return this.Winner();
-    // }
+      y = fila;
+      x = columna;
+      cnt45--;
+      count = 0;
+      exit = false;
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        if (item === turn) {
+          cnt45++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x++;
+          y--;
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
+  
+      if (cnt45 >= 4) {
+        return this.Winner();
+      }
 
-    // let counter: number = 0;
-    // let showtoast: boolean = false;
-    // this.columnLevel.forEach((element: number) => {
+      
+      y = fila;
+      x = columna;
+      count = 0;
+      exit = false;
+      //Checa diagonal en 135
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        if (item === turn) {
+          cnt135++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x--;
+          y--;
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
 
-    //   if (element === 6)
-    //     counter++;
-    //   if (counter === 7) {
-    //     showtoast = true;
-    //   }
-    // });
-    // console.log('contador ', counter);
-    // return showtoast;
+      y = fila;
+      x = columna;
+      cnt135--;
+      count = 0;
+      exit = false;
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        if (item === turn) {
+          cnt135++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x++;
+          y++;
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
+
+      if (cnt135 >= 4) {
+        return this.Winner();
+      }
+
+      //Revisamos en caso de que se llene totalmente el tablero
+      if (this.isATie()) {
+        return this.Tie();
+      }
   }
-  gotoRoot(){
+
+  gotoRoot() {
     this.navCtrl.setRoot(HomePage);
     this.navCtrl.popToRoot();
   }
+  isATie() {
+    let counter: number = 0;
+    let showtoast: boolean = false;
+    this.columnLevel.forEach((element: number) => {
 
+      if (element === 6)
+        counter++;
+      if (counter === 7) {
+        showtoast = true;
+      }
+    });
+    return showtoast;
+  }
 
+  CPU() {
+    let col : number = 0;
+    do {
+      col = Math.floor(Math.random()*(6-0+1)+0)
+    } while( this.columnLevel[ col ] >= 6);
+    return col+1;
+  }
 }
+

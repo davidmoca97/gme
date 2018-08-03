@@ -122,7 +122,7 @@ export class AboutPage {
       buttons: [{
         text: 'Okey',
         handler: () => {
-          //this.reiniciar();
+          this.reiniciar();
         }
       }]
     });
@@ -159,10 +159,6 @@ export class AboutPage {
 
   }
   checkAllBoard(fila, columna) {
-    //Revisamos en caso de que se llene totalmente el tablero
-    if (this.isATie()) {
-      return this.Tie();
-    } else {
       let turn: string = '';
       let cntR: number = 0;
       let cntC: number = 0;
@@ -177,116 +173,141 @@ export class AboutPage {
       //Checa las filas
       for (let i = 0; i < 7; i++) {
         let item = this.board[fila].array[i].selectedBy;
-        let anterior = null;
-        if (i !== 0) {
-          anterior = this.board[fila].array[i - 1].selectedBy;
-        }
-        if ((item === turn) && (anterior === turn || anterior === null || cntR === 0)) {
-          cntR++;
-        }
-        if (cntR === 3 && item !== turn) {
+        if (item === turn) {
+          cntR ++;
+        } else {
           cntR = 0;
         }
-        console.log('fila '+fila,',(i-1) '+i);
-        console.log('anterior',anterior);
-
+        if (cntR === 4) {
+          break;
+        }
       }
-      if (cntR > 4) {
-        return this.Winner();
-      }else if(cntR===4){
+
+      if (cntR === 4) {
         return this.Winner();
       }
 
       // Checaste columnas
       for (let i = 0; i < 6; i++) {
         let item = this.board[i].array[columna].selectedBy;
-        let anterior = null;
-        if (i !== 0) {
-          anterior = this.board[i - 1].array[columna].selectedBy;
-        }
-        if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
-          cntC++;
-        }
-        if (cntC === 3 && item !== turn) {
+        if (item === turn) {
+          cntC ++;
+        } else {
           cntC = 0;
         }
+        if (cntC === 4) {
+          break;
+        }
       }
-      if (cntC ===4) {
+      if (cntC === 4) {
         return this.Winner();
       }
 
-      let difference45R: number = Math.abs(0 - columna);
-      let difference45C: number = 6 - fila - 1;
-      let minus: number = 0, x = 0, y = 0;
-      if (difference45C <= difference45R) {
-        minus = difference45C;
-      }
-      else {
-        minus = difference45R;
-      }
-
-      x = difference45C - minus;
-      y = difference45R - minus;
-
-      // Revisa las columnas de 45°
-      while (y <= 6 && x <= 5) {
-        console.log("******************************");
-        let item = this.board[5 - x].array[y].selectedBy;
-        console.log(5 - x + ',' + y);
-        let anterior = null;
-        if (5 - x !== 5 && y !== 0) {
-          console.log("ANTERIOR " + (6 - x) + ',' + (y - 1));
-          anterior = this.board[6 - x].array[y - 1].selectedBy;
-          console.log("ANTERIOR " + anterior);
-        }
-        if ((item === turn) && (anterior === turn || cnt45 === 0) && item !== null) {
+      let y: number = fila, x: number = columna;
+      let exit: boolean = false;
+      let count: number = 0;
+  
+      console.log("INICIA EN: " + x + ',' + y );
+  
+      //Checa diagonal en 45°
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        console.log("ITEM: " + item);
+        if (item === turn) {
           cnt45++;
         }
-        if (cnt45 === 3 && anterior === null) {
-          cnt45 = 0;
+        if (item === null) {
+          exit = true;
+        } else {
+          x--;
+          y++;
+          console.log("Siguiente: " + x + ',' + y );
         }
-        // console.log('contardor', cnt45);
-        // console.log('. ' + item);
-        // console.log("******************************");
-        y++;
-        x++;
-      }
-      if (cnt45 === 4) {
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
+
+      y = fila;
+      x = columna;
+      cnt45--;
+      count = 0;
+      exit = false;
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        console.log("ITEM: " + item);
+        if (item === turn) {
+          cnt45++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x++;
+          y--;
+          console.log("Siguiente: " + x + ',' + y );
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
+  
+      console.log(cnt45 + ' -   Objetos');
+
+      if (cnt45 >= 4) {
         return this.Winner();
-      } else if (cnt45 > 4) {
+      }
+
+      
+      y = fila;
+      x = columna;
+      count = 0;
+      exit = false;
+      //Checa diagonal en 135
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        console.log("ITEM: " + item);
+        if (item === turn) {
+          cnt135++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x--;
+          y--;
+          console.log("Siguiente: " + x + ',' + y );
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
+
+      y = fila;
+      x = columna;
+      cnt135--;
+      count = 0;
+      exit = false;
+      do {
+        let item = this.board[y].array[x].selectedBy;
+        console.log("ITEM: " + item);
+        if (item === turn) {
+          cnt135++;
+        }
+        if (item === null) {
+          exit = true;
+        } else {
+          x++;
+          y++;
+          console.log("Siguiente: " + x + ',' + y );
+        }
+        count++;
+      } while( !exit && count<4 && y>=0 && y<=5 && x>=0 && x<=6 );
+  
+      console.log(cnt135 + ' -   Objetos');
+
+      if (cnt135 >= 4) {
         return this.Winner();
       }
 
-
-
-      let difference135R: number = Math.abs(0 - columna);
-      let difference135C: number = 5 - fila;
-      let minuss: number = 0, x2 = 0, y2 = 0;
-      if (difference135C <= difference135R) {
-        minuss = difference135C;
+      //Revisamos en caso de que se llene totalmente el tablero
+      if (this.isATie()) {
+        return this.Tie();
       }
-      else {
-        minuss = difference135R;
-      }
-
-      x2 = difference135C - minuss;
-      y2 = difference135R - minuss;
-
-
-    }
-
-
-
-
-    // Revisa columnas de 135°
-
-
-
-
-
-
-
   }
+
   gotoRoot() {
     this.navCtrl.setRoot(HomePage);
     this.navCtrl.popToRoot();

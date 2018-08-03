@@ -1,13 +1,23 @@
 <ion-header>
-  <ion-navbar color="primary">
-    <ion-title text-center>MENU</ion-title>
-  </ion-navbar>
+    <ion-navbar color="primary">
+        <ion-title text-center>MENU</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding class="animated zoomIn">
-<div class="middleof">
-  <button ion-button vertical-align outline block icon-start color="dark" large (click)="addP1vsP2()"><ion-icon name="person"></ion-icon>P1 VS P2</button>
-  <button ion-button vertical-align outline block icon-start color="dark" large (click)="addP1vsCPU()"><ion-icon name="desktop"></ion-icon>P1 VS CPU</button>
-</div>
+    <!-- <ion-slides>
+        <ion-slide>
+            <ion-toolbar>
+            </ion-toolbar>
+          
+        </ion-slide>
+    </ion-slides> -->
+    <div class="middleof">
+        <h2 text-center>FOUR IN ROW</h2>
+        <img src="https://vignette.wikia.nocookie.net/rickandmorty/images/7/75/Blips_and_Chitz_Coupon.png/revision/latest?cb=20160909050613" class="slide-image" />
+        <img src="https://vignette.wikia.nocookie.net/rickandmorty/images/b/b5/Morty_Token_largec.png/revision/latest?cb=20161001191020" class="slide-image">
+        <button ion-button vertical-align outline block icon-start color="danger" large (click)="addP1vsP2()"><ion-icon name="person"></ion-icon>P1 VS P2</button>
+        <button ion-button vertical-align outline block icon-start color="secondary" large (click)="addP1vsCPU()"><ion-icon name="ios-desktop-outline"></ion-icon>P1 VS CPU</button>
+    </div>
 
 </ion-content>

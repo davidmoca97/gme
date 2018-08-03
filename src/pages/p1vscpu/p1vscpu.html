@@ -1,44 +1,44 @@
 <ion-header>
     <ion-navbar color="primary">
-      <ion-title text-center>
-        FOUR IN ROW
-      </ion-title>
+        <ion-title text-center>
+            FOUR IN ROW
+        </ion-title>
     </ion-navbar>
-  </ion-header>
+</ion-header>
 
-  <ion-content no-bounce padding class="animated zoomIn">
+<ion-content no-bounce padding class="animated zoomIn">
     <h4 text-center>P1 VS CPU</h4>
-      <ion-grid no-bounce (click)="takeTurn();" (swiperight)="moveRight();" (swipeleft)="moveLeft();">
-          <ion-row>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="1==selectedGhost" id="ghost1" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="2==selectedGhost" id="ghost2" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="3==selectedGhost" id="ghost3" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="4==selectedGhost" id="ghost4" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="5==selectedGhost" id="ghost5" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="6==selectedGhost" id="ghost6" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-              <ion-col class="ghost">
-                  <img [src]='imgSrc' *ngIf="7==selectedGhost" id="ghost7" style='width: 4vh;height: 4vh;' />
-              </ion-col>
-          </ion-row>
-          <div style="margin-bottom: 10%;"></div>
-          <ion-row *ngFor="let i of board">
-              <ion-col width-28 *ngFor="let j of i.array">
-                  <img [src]='j.img' style='width: 5vh;height: 4vh;' [ngClass]="(j.selectedBy!=null)?'fadeIn':''" />
-              </ion-col>
-          </ion-row>
-      </ion-grid>
-      <button ion-button full small (click)="reiniciar();">Reiniciar</button>
-      <button ion-button full small color="danger" (click)="gotoRoot()">Volver</button>
-  </ion-content>
+    <ion-grid no-bounce (click)="globalTurn();" (swiperight)="moveRight();" (swipeleft)="moveLeft();">
+        <ion-row>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="1==selectedGhost" id="ghost1" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="2==selectedGhost" id="ghost2" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="3==selectedGhost" id="ghost3" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="4==selectedGhost" id="ghost4" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="5==selectedGhost" id="ghost5" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="6==selectedGhost" id="ghost6" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+            <ion-col class="ghost">
+                <img [src]='imgSrc' *ngIf="7==selectedGhost" id="ghost7" style='width: 4vh;height: 4vh;' />
+            </ion-col>
+        </ion-row>
+        <div style="margin-bottom: 10%;"></div>
+        <ion-row *ngFor="let i of board">
+            <ion-col width-28 *ngFor="let j of i.array">
+                <img [src]='j.img' style='width: 5vh;height: 4vh;' [ngClass]="(j.selectedBy!=null)?'fadeIn':''" />
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <button ion-button full small (click)="reiniciar();">Reiniciar</button>
+    <button ion-button full small color="danger" (click)="gotoRoot()">Volver</button>
+</ion-content>
