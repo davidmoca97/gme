@@ -1,4 +1,4 @@
-import { AboutPage } from './../about/about';
+import { HomePage } from './../home/home';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
@@ -10,7 +10,7 @@ export class ContactPage {
 
   constructor(public navCtrl: NavController) {
     setTimeout(()=>{
-      this.navCtrl.setRoot(AboutPage);
+      this.navCtrl.setRoot(HomePage);
       this.navCtrl.popToRoot();
     },4200);
   }

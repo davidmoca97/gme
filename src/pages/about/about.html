@@ -7,6 +7,7 @@
 </ion-header>
 
 <ion-content no-bounce padding class="animated zoomIn">
+  <h4 text-center>P1 VS P2</h4>
     <ion-grid no-bounce (click)="takeTurn();" (swiperight)="moveRight();" (swipeleft)="moveLeft();">
         <ion-row>
             <ion-col class="ghost">
@@ -39,5 +40,5 @@
         </ion-row>
     </ion-grid>
     <button ion-button full small (click)="reiniciar();">Reiniciar</button>
-    <button ion-button full small color="danger">Volver</button>
+    <button ion-button full small color="danger" (click)="gotoRoot()">Volver</button>
 </ion-content>

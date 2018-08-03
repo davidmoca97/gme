@@ -1,12 +1,12 @@
 import { HomePage } from './../home/home';
 import { Component } from '@angular/core';
-import { NavController, AlertController, ViewController, Content } from 'ionic-angular';
+import { NavController, AlertController, ViewController } from 'ionic-angular';
 
 @Component({
-  selector: 'page-about',
-  templateUrl: 'about.html'
+  selector: 'page-p1vscpu',
+  templateUrl: 'p1vscpu.html',
 })
-export class AboutPage {
+export class P1vscpuPage {
 
   private imgSrc: String = '';
   //Tablero
@@ -43,7 +43,7 @@ export class AboutPage {
       this.board.push({ array: array });
     }
   }
-  ionViewWillEnter() {
+  ionViewWillEnter(){
     this.viewCtrl.showBackButton(false);
   }
 
@@ -72,7 +72,7 @@ export class AboutPage {
             this.board[6 - selectedColumnLevel].array[ghost - 1].img = this.P2IMGSRC;
             this.board[6 - selectedColumnLevel].array[ghost - 1].selectedBy = 'P2';
           }
-          // Se revisa el tablero de forma horizontal, vertical y en diagonal
+
           this.checkAllBoard((6 - selectedColumnLevel), (ghost - 1));
           //Se cambia el turno (variables, imágenes)
           this.selectedGhost = 4;
@@ -99,8 +99,10 @@ export class AboutPage {
     }
   }
 
-  //Alerta de Empate
+  //Alerta de Empate *aún no se usa*
   Tie() {
+    // if (!this.isWorking) {
+    // }
     let alert = this.alertCtrl.create({
       title: 'Miss',
       subTitle: 'It\'s a tie!',
@@ -114,15 +116,17 @@ export class AboutPage {
     alert.present();
   }
 
-  //Alerta de Ganador
+  //Alerta de Empate *aún no se usa*
   Winner() {
+    // if (!this.isWorking) {
+    // }
     let alert = this.alertCtrl.create({
       title: 'You\'ve won',
       subTitle: ':)',
       buttons: [{
-        text: 'Okey',
+        text: 'Dismiss',
         handler: () => {
-          //this.reiniciar();
+          this.reiniciar();
         }
       }]
     });
@@ -155,153 +159,89 @@ export class AboutPage {
   }
 
   reiniciar() {
-    this.navCtrl.setRoot(this.navCtrl.getActive().component);
+    this.navCtrl.setRoot(this.navCtrl.getActive().component );
 
   }
   checkAllBoard(fila, columna) {
-    //Revisamos en caso de que se llene totalmente el tablero
-    if (this.isATie()) {
-      return this.Tie();
+    let turn: string = '';
+    let cntR: number = 0;
+    let cntC: number = 0;
+    let cnt45: number = 0;
+    let cnt135: number = 0;
+    if (this.P1Turn) {
+      turn = 'P1';
     } else {
-      let turn: string = '';
-      let cntR: number = 0;
-      let cntC: number = 0;
-      let cnt45: number = 0;
-      let cnt135: number = 0;
-      if (this.P1Turn) {
-        turn = 'P1';
-      } else {
-        turn = 'P2';
-      }
-
-      //Checa las filas
-      for (let i = 0; i < 7; i++) {
-        let item = this.board[fila].array[i].selectedBy;
-        let anterior = null;
-        if (i !== 0) {
-          anterior = this.board[fila].array[i - 1].selectedBy;
-        }
-        if ((item === turn) && (anterior === turn || anterior === null || cntR === 0)) {
-          cntR++;
-        }
-        if (cntR === 3 && item !== turn) {
-          cntR = 0;
-        }
-        console.log('fila '+fila,',(i-1) '+i);
-        console.log('anterior',anterior);
-
-      }
-      if (cntR > 4) {
-        return this.Winner();
-      }else if(cntR===4){
-        return this.Winner();
-      }
-
-      // Checaste columnas
-      for (let i = 0; i < 6; i++) {
-        let item = this.board[i].array[columna].selectedBy;
-        let anterior = null;
-        if (i !== 0) {
-          anterior = this.board[i - 1].array[columna].selectedBy;
-        }
-        if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
-          cntC++;
-        }
-        if (cntC === 3 && item !== turn) {
-          cntC = 0;
-        }
-      }
-      if (cntC ===4) {
-        return this.Winner();
-      }
-
-      let difference45R: number = Math.abs(0 - columna);
-      let difference45C: number = 6 - fila - 1;
-      let minus: number = 0, x = 0, y = 0;
-      if (difference45C <= difference45R) {
-        minus = difference45C;
-      }
-      else {
-        minus = difference45R;
-      }
-
-      x = difference45C - minus;
-      y = difference45R - minus;
-
-      // Revisa las columnas de 45°
-      while (y <= 6 && x <= 5) {
-        console.log("******************************");
-        let item = this.board[5 - x].array[y].selectedBy;
-        console.log(5 - x + ',' + y);
-        let anterior = null;
-        if (5 - x !== 5 && y !== 0) {
-          console.log("ANTERIOR " + (6 - x) + ',' + (y - 1));
-          anterior = this.board[6 - x].array[y - 1].selectedBy;
-          console.log("ANTERIOR " + anterior);
-        }
-        if ((item === turn) && (anterior === turn || cnt45 === 0) && item !== null) {
-          cnt45++;
-        }
-        if (cnt45 === 3 && anterior === null) {
-          cnt45 = 0;
-        }
-        // console.log('contardor', cnt45);
-        // console.log('. ' + item);
-        // console.log("******************************");
-        y++;
-        x++;
-      }
-      if (cnt45 === 4) {
-        return this.Winner();
-      } else if (cnt45 > 4) {
-        return this.Winner();
-      }
-
-
-
-      let difference135R: number = Math.abs(0 - columna);
-      let difference135C: number = 5 - fila;
-      let minuss: number = 0, x2 = 0, y2 = 0;
-      if (difference135C <= difference135R) {
-        minuss = difference135C;
-      }
-      else {
-        minuss = difference135R;
-      }
-
-      x2 = difference135C - minuss;
-      y2 = difference135R - minuss;
-
-
+      turn = 'P2';
     }
 
+    //Checa las filas
+    for (let i = 0; i < 7; i++) {
+      let item = this.board[fila].array[i].selectedBy;
+      let anterior = null;
+      if (i !== 0) {
+        anterior = this.board[fila].array[i - 1].selectedBy;
+      }
+      if ((item === turn) && (anterior === turn || anterior === null || cntR === 0)) {
+        cntR++;
+      }
+      // console.log(i + '. ' + item);
+    }
+    if (cntR === 4) {
+      return this.Winner();
+    }
+    // Checaste columnas
+    for (let i = 0; i < 6; i++) {
+      let item = this.board[i].array[columna].selectedBy;
+      let anterior = null;
+      if (i !== 0) {
+        anterior = this.board[i - 1].array[columna].selectedBy;
+      }
+      if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
+        cntC++;
+      }
+      console.log(i + '. ' + item);
+    }
+    if (cntC === 4) {
+      return this.Winner();
+    }
 
+    let difference45R: number = Math.abs(0-columna);
+    let difference45C: number = 6-fila-1;
 
+    console.log("INICIA EN: " + difference45C + ',' + difference45R );
+     // Checaste diagonal 35
+    //  for (let i = 0; i < 6; i++) {
+    //   let item = this.board[i].array[columna].selectedBy;
+    //   let anterior = null;
+    //   if (i !== 0) {
+    //     anterior = this.board[i - 1].array[columna].selectedBy;
+    //   }
+    //   if ((item === turn) && (anterior === turn || anterior === null || cntC === 0)) {
+    //     cntC++;
+    //   }
+    //   console.log(i + '. ' + item);
+    // }
+    // if (cntC === 4) {
+    //   return this.Winner();
+    // }
 
-    // Revisa columnas de 135°
+    // let counter: number = 0;
+    // let showtoast: boolean = false;
+    // this.columnLevel.forEach((element: number) => {
 
-
-
-
-
-
-
+    //   if (element === 6)
+    //     counter++;
+    //   if (counter === 7) {
+    //     showtoast = true;
+    //   }
+    // });
+    // console.log('contador ', counter);
+    // return showtoast;
   }
-  gotoRoot() {
+  gotoRoot(){
     this.navCtrl.setRoot(HomePage);
     this.navCtrl.popToRoot();
   }
-  isATie() {
-    let counter: number = 0;
-    let showtoast: boolean = false;
-    this.columnLevel.forEach((element: number) => {
 
-      if (element === 6)
-        counter++;
-      if (counter === 7) {
-        showtoast = true;
-      }
-    });
-    return showtoast;
-  }
+
 }
